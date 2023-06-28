@@ -1,3 +1,8 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,7 +12,65 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.captain {
+  background: transparent url('../public/assets/captain_idle_sprite.png') 0 0 no-repeat;
+  height: 74px;
+  width: 82px;
+  animation: captain-idle 4s steps(32) infinite;
+}
+@keyframes captain-idle {
+  100% {
+    background-position: -2624px, 0;
+  }
+}
+
+.big {
+  background: transparent url('../public/assets/big_idle_sprite.png') 0 0 no-repeat;
+  height: 76px;
+  width: 79px;
+  animation: big-idle 4s steps(38) infinite;
+}
+@keyframes big-idle {
+  100% {
+    background-position: -3002px, 0;
+  }
+}
+
+.mc {
+  background: transparent url('../public/assets/mc_idle_sprite.png') 0 0 no-repeat;
+  height: 60px;
+  width: 60px;
+  animation: mc-idle 3s steps(26) infinite;
+}
+@keyframes mc-idle {
+  100% {
+    background-position: -1560px, 0;
+  }
+}
+
+.whale {
+  background: transparent url('../public/assets/whale_idle_sprite.png') 0 0 no-repeat;
+  height: 48px;
+  width: 70px;
+  animation: whale-idle 4s steps(44) infinite;
+}
+@keyframes whale-idle {
+  100% {
+    background-position: -3080px, 0;
+  }
+}
+
+h1 {
+  text-align: center;
+}
+
+.pirates {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px;
+}
+
+.row2 {
+  display: flex;
 }

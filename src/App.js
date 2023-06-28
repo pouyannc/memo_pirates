@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import Pirate from './components/pirate';
+import Header from './components/header';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <Header />
+
+      <div className='pirates'>
+        <div className='row1'>
+          <Pirate className='mc' />
+        </div>
+        <div className='row2'>
+          <Pirate className='big' />
+          <Pirate className='captain' />
+        </div>
+        <div className='row3'>
+          <Pirate className='whale' />
+        </div>
+      </div>
+    </main>
   );
 }
 
