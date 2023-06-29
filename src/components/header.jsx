@@ -1,7 +1,9 @@
-const Header = () => {
+const Header = ({ score, handleStart }) => {
   return (
-    <div>
+    <div className="header">
+      <div>Score: {score}</div>
       <h1>MEMORY PIRATES</h1>
+      <button onClick={handleStart}>Play</button>
     </div>
   )
 };

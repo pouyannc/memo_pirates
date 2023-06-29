@@ -20,7 +20,18 @@ body {
 }
 @keyframes captain-idle {
   100% {
-    background-position: -2624px, 0;
+    background-position: -2624px 0;
+  }
+}
+.clicked .captain{
+  background: transparent url('../public/assets/captain_hit_sprite.png') 0 0 no-repeat;
+  height: 74px;
+  width: 82px;
+  animation: captain-hit 0.6s steps(5) infinite;
+}
+@keyframes captain-hit {
+  100% {
+    background-position: -410px 0;
   }
 }
 
@@ -32,7 +43,18 @@ body {
 }
 @keyframes big-idle {
   100% {
-    background-position: -3002px, 0;
+    background-position: -3002px 0;
+  }
+}
+.clicked .big {
+  background: transparent url('../public/assets/big_hit_sprite.png') 0 0 no-repeat;
+  height: 76px;
+  width: 79px;
+  animation: big-hit 0.6s steps(5) infinite;
+}
+@keyframes big-hit {
+  100% {
+    background-position: -395px 0;
   }
 }
 
@@ -44,7 +66,18 @@ body {
 }
 @keyframes mc-idle {
   100% {
-    background-position: -1560px, 0;
+    background-position: -1560px 0;
+  }
+}
+.clicked .mc {
+  background: transparent url('../public/assets/mc_hit_sprite.png') 0 0 no-repeat;
+  height: 60px;
+  width: 60px;
+  animation: mc-hit 0.6s steps(5) infinite;
+}
+@keyframes mc-hit {
+  100% {
+    background-position: -300px 0;
   }
 }
 
@@ -56,12 +89,25 @@ body {
 }
 @keyframes whale-idle {
   100% {
-    background-position: -3080px, 0;
+    background-position: -3080px 0;
+  }
+}
+.clicked .whale {
+  background: transparent url('../public/assets/whale_hit_sprite.png') 0 0 no-repeat;
+  height: 48px;
+  width: 70px;
+  animation: whale-hit 0.6s steps(10) infinite;
+}
+@keyframes whale-hit {
+  100% {
+    background-position: -700px 0;
   }
 }
 
-h1 {
-  text-align: center;
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .pirates {

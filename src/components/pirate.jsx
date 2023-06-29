@@ -1,8 +1,9 @@
-const Pirate = ({ className }) => {
+const Pirate = ({ className, sound, onClick }) => {
 
   return (
-    <div className={className}>
-
+    <div onClick={onClick}>
+      <div className={className}></div>
+      <audio src={sound}></audio>
     </div>
   )
 };
