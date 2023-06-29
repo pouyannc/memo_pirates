@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useFirstRender } from './hooks/useFirstRender';
 import Pirate from './components/pirate';
 import Header from './components/header';
 
 function App() {
   const [score, setScore] = useState(0);
   const [pattern, setPattern] = useState([]);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const pirates = ['mc', 'big', 'captain', 'whale'];
   const timer = ms => new Promise(res => setTimeout(res, ms));
+  const firstRender = useFirstRender();
 
   const handlePirateClick = (e, pirate = undefined) => {
     if (!pirate) pirate = e.target;
     else pirate = document.querySelector(`.${pirate}`);
     pirate.nextSibling.play();
     pirate.parentNode.className = 'clicked';
+    timer(1000);
     setTimeout(() => {
       pirate.parentNode.className = 'pirate-button';
     }, 600);
@@ -28,6 +31,10 @@ function App() {
 
   // plays the pattern when it is updated through handleRound
   useEffect(() => {
+    if(firstRender) { // skipping the first render so that disabled stays true until play is clicked
+      return;
+    }
+
     const playPattern = async () => {
       for (let pirate of pattern) {
         handlePirateClick(null, pirate);
@@ -36,7 +43,7 @@ function App() {
       setDisabled(false);
     }
     playPattern();
-  },[pattern])
+  }, [pattern])
 
   return (
     <main>
