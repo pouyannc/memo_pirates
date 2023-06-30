@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { useFirstRender } from './hooks/useFirstRender';
+import { useState, useEffect } from 'react';
 import Pirate from './components/pirate';
 import Header from './components/header';
 import GameOver from './components/gameOver';
@@ -14,8 +13,8 @@ function App() {
 
   const pirates = ['mc', 'big', 'captain', 'whale'];
   const timer = ms => new Promise(res => setTimeout(res, ms));
-  const firstRender = useFirstRender();
 
+  // displaying pirate animation when clicked or invoked through patterns
   const handlePirateClick = (e, pirate = undefined) => {
     if (!pirate) pirate = e.target;
     else pirate = document.querySelector(`.${pirate}`);
@@ -31,7 +30,10 @@ function App() {
     }
   };
 
+  // initial start of the first round (initial play or play again or reset)
   const handleGameStart = () => {
+    if (gameStarted) handleGameOver();
+
     setPlayerInputs([]);
     setScore(0);
     setLose(false);
@@ -39,12 +41,14 @@ function App() {
     handleRound();
   };
 
+  // starting the next round
   const handleRound = () => {
     setDisabled(true);
     const randomPirate = pirates[Math.floor(Math.random()*pirates.length)];
     setPattern([...pattern, randomPirate]);
   };
 
+  // when the player input does not match the pattern
   const handleGameOver = () => {
     setPattern([]);
     setLose(true);
@@ -52,6 +56,7 @@ function App() {
     setDisabled(true);
   };
 
+  // when the player inputs match the pattern correctly
   const handleTurnWin = () => {
     setScore(score+1);
     setPlayerInputs([]);
@@ -62,8 +67,8 @@ function App() {
 
   // plays the pattern when it is updated through handleRound
   useEffect(() => {
-    // skipping the first render so that disabled stays true until play is clicked
-    if(firstRender) return;
+    // skipping the first render and when a game ends so that disabled stays true until play is clicked
+    if(pattern.length < 1) return;
 
     const playPattern = async () => {
       for (let pirate of pattern) {
@@ -77,7 +82,7 @@ function App() {
 
   // for checking the user input vs the given pattern
   useEffect(() => {
-    if (firstRender) return;
+    if (pattern.length < 1) return;
 
     if (playerInputs[playerInputs.length-1] !== pattern[playerInputs.length-1]) return handleGameOver();
 
