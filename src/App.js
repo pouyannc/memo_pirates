@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Pirate from './components/pirate';
-import Header from './components/header';
-import GameOver from './components/gameOver';
+import Pirate from './components/Pirate';
+import Header from './components/Header';
+import GameOver from './components/GameOver';
 
 function App() {
   const [score, setScore] = useState(0);
@@ -10,35 +10,46 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerInputs, setPlayerInputs] = useState([]);
   const [lose, setLose] = useState(false);
+  
+  const timer = ms => new Promise(res => setTimeout(res, ms));
 
   const pirates = ['mc', 'big', 'captain', 'whale'];
-  const timer = ms => new Promise(res => setTimeout(res, ms));
+  const keys = new Map([
+    ['ArrowUp', 'mc'],
+    ['ArrowLeft', 'big'],
+    ['ArrowRight', 'captain'],
+    ['ArrowDown', 'whale']
+  ])
 
   // displaying pirate animation when clicked or invoked through patterns
   const handlePirateClick = (e, pirate = undefined) => {
-    if (!pirate) pirate = e.target;
-    else pirate = document.querySelector(`.${pirate}`);
+    if (!pirate) {
+      // FIGURE OUT HOW TO TAKE FOCUS OFF
+      if (e.key) {
+        if (keys.has(e.key)) pirate = document.querySelector(`.${keys.get(e.key)}`);
+        else return;
+      } else pirate = e.target;
+    } else pirate = document.querySelector(`.${pirate}`);
+
     pirate.nextSibling.play();
     pirate.parentNode.className = 'clicked';
-    timer(1000);
     setTimeout(() => {
       pirate.parentNode.className = 'pirate-button';
     }, 600);
 
     if (!disabled) {
-      setPlayerInputs([...playerInputs, pirate.className]);
+      console.log(pirate.className)
+      setPlayerInputs(p => [...p, pirate.className]);
     }
   };
 
   // initial start of the first round (initial play or play again or reset)
   const handleGameStart = () => {
-    if (gameStarted) handleGameOver();
-
+    setPattern([]);
     setPlayerInputs([]);
     setScore(0);
     setLose(false);
     setGameStarted(true);
-    handleRound();
   };
 
   // starting the next round
@@ -48,32 +59,23 @@ function App() {
     setPattern([...pattern, randomPirate]);
   };
 
-  // when the player input does not match the pattern
-  const handleGameOver = () => {
-    setPattern([]);
-    setLose(true);
-    setGameStarted(false);
-    setDisabled(true);
-  };
-
-  // when the player inputs match the pattern correctly
-  const handleTurnWin = () => {
-    setScore(score+1);
-    setPlayerInputs([]);
-    setTimeout(() => {
-      handleRound();
-    }, 1200);
-  };
-
   // plays the pattern when it is updated through handleRound
   useEffect(() => {
-    // skipping the first render and when a game ends so that disabled stays true until play is clicked
-    if(pattern.length < 1) return;
+    // skipping the first render and when a game ends so that disabled stays true until new game starts. 
+    // handleRound here to ensure pattern is emptied.
+    if(pattern.length < 1) {
+      if (gameStarted) {
+        setTimeout(() => {
+          handleRound();
+        }, 1200);
+      }
+      return;
+    }
 
     const playPattern = async () => {
       for (let pirate of pattern) {
         handlePirateClick(null, pirate);
-        await timer(900);
+        await timer(800);
       }
       setDisabled(false);
     }
@@ -82,12 +84,34 @@ function App() {
 
   // for checking the user input vs the given pattern
   useEffect(() => {
-    if (pattern.length < 1) return;
+    if (playerInputs.length < 1) return;
 
+    // when the player input does not match the pattern
+    const handleGameOver = () => {
+      setLose(true);
+      setGameStarted(false);
+      setDisabled(true);
+    };
     if (playerInputs[playerInputs.length-1] !== pattern[playerInputs.length-1]) return handleGameOver();
 
+    // when the player inputs match the pattern correctly
+    const handleTurnWin = () => {
+      window.removeEventListener('keydown', handlePirateClick);
+      setDisabled(true);
+      setScore(s => s+1);
+      setPlayerInputs([]);
+      setTimeout(() => {
+        handleRound();
+      }, 1200);
+    };
     if (playerInputs.length === pattern.length) handleTurnWin();
   }, [playerInputs]);
+
+  useEffect(() => {
+    if (!disabled) window.addEventListener('keydown', handlePirateClick);
+
+    return () => {window.removeEventListener('keydown', handlePirateClick);};
+  }, [disabled])
 
   return (
     <main>
