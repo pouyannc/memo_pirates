@@ -3,41 +3,63 @@
   margin: 0;
 }
 
-body {
+main {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, optima, Geneva, Tahoma, 'Helvetica Neue', BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('../public/assets/marine-motive-with-ropes-sea-creatures.jpg');
+  background-color: rgb(0,0,0,0.1);
+  background-blend-mode: darken;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
+  transition-property: all;
+  transition-duration: 0.4s;
+}
+
+.shift {
+  background-color: rgb(0,0,0,0.7);
+  background-blend-mode: darken;
+  transition-property: all;
+  transition-duration: 0.4s;
 }
 
 .pirate-button, .clicked {
-  background: none;
+  background: inherit;
 	color: inherit;
-	border: none;
-	padding: 0;
+	padding: 0px;
+  border: none;
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+  filter: drop-shadow(0px 18px 14px #000000);
 }
+
+/*-----------PIRATES/ANIMATIONS---------*/
 
 .captain {
   background: transparent url('../public/assets/captain_idle_sprite.png') 0 0 no-repeat;
   height: 74px;
   width: 82px;
-  animation: captain-idle 4s steps(32) infinite;
+  transform: scale(1.4) rotateY(180deg);
+  animation: captain-idle 8s steps(31) infinite;
 }
 @keyframes captain-idle {
-  100% {
-    background-position: -2624px 0;
+  20%, 100% {
+    background-position: -2542px 0;
   }
 }
 .clicked .captain{
   background: transparent url('../public/assets/captain_hit_sprite.png') 0 0 no-repeat;
   height: 74px;
   width: 82px;
-  animation: captain-hit 0.6s steps(5) infinite;
+  animation: captain-hit 0.5s steps(5) infinite;
+  filter: brightness(1.2);
+  filter: drop-shadow(0px 18px 24px #d7d7d7);
 }
 @keyframes captain-hit {
   100% {
@@ -49,18 +71,21 @@ body {
   background: transparent url('../public/assets/big_idle_sprite.png') 0 0 no-repeat;
   height: 76px;
   width: 79px;
-  animation: big-idle 4s steps(38) infinite;
+  transform: scale(1.6);
+  animation: big-idle 12s steps(37) infinite;
 }
 @keyframes big-idle {
-  100% {
-    background-position: -3002px 0;
+  30%, 100% {
+    background-position: -2923px 0;
   }
 }
 .clicked .big {
   background: transparent url('../public/assets/big_hit_sprite.png') 0 0 no-repeat;
   height: 76px;
   width: 79px;
-  animation: big-hit 0.6s steps(5) infinite;
+  animation: big-hit 0.5s steps(5) infinite;
+  filter: brightness(1.2);
+  filter: drop-shadow(0px 18px 24px #d7d7d7);
 }
 @keyframes big-hit {
   100% {
@@ -72,18 +97,21 @@ body {
   background: transparent url('../public/assets/mc_idle_sprite.png') 0 0 no-repeat;
   height: 60px;
   width: 60px;
-  animation: mc-idle 3s steps(26) infinite;
+  transform: scale(1.4);
+  animation: mc-idle 9s steps(25) infinite;
 }
 @keyframes mc-idle {
-  100% {
-    background-position: -1560px 0;
+  25%, 100% {
+    background-position: -1500px 0;
   }
 }
 .clicked .mc {
   background: transparent url('../public/assets/mc_hit_sprite.png') 0 0 no-repeat;
   height: 60px;
   width: 60px;
-  animation: mc-hit 0.6s steps(5) infinite;
+  animation: mc-hit 0.5s steps(5) infinite;
+  filter: brightness(1.2);
+  filter: drop-shadow(0px 18px 24px #d7d7d7);
 }
 @keyframes mc-hit {
   100% {
@@ -95,18 +123,21 @@ body {
   background: transparent url('../public/assets/whale_idle_sprite.png') 0 0 no-repeat;
   height: 48px;
   width: 70px;
-  animation: whale-idle 4s steps(44) infinite;
+  transform: scale(1.9);
+  animation: whale-idle 12s steps(43) infinite;
 }
 @keyframes whale-idle {
-  100% {
-    background-position: -3080px 0;
+  30%, 100% {
+    background-position: -3010px 0;
   }
 }
 .clicked .whale {
   background: transparent url('../public/assets/whale_hit_sprite.png') 0 0 no-repeat;
   height: 48px;
   width: 70px;
-  animation: whale-hit 0.6s steps(10) infinite;
+  animation: whale-hit 0.5s steps(10) infinite;
+  filter: brightness(1.2);
+  filter: drop-shadow(0px 18px 24px #d7d7d7);
 }
 @keyframes whale-hit {
   100% {
@@ -114,21 +145,100 @@ body {
   }
 }
 
+/*---------------------COMPONENT SPACING-----------------*/
+
 .header {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
+  padding: 0.5%;
+  background: linear-gradient(0deg, rgb(206, 237, 238) 0%, rgba(149,223,255,1) 100%);;
+  border-bottom: solid rgb(42, 42, 42) 4px;
+}
+
+.score {
+  font-size: 22px;
+  font-weight: 600;
+  background-color: white;
+  border-radius: 40px;
+  padding: 2px 10px;
+  border: solid rgb(157, 137, 83) 2px;
+}
+
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  min-width: 40%;
+}
+.title {
+  font-size: 36px;
+  text-align: center;
+}
+.title-icon {
+  width: 30px;
+}
+
+.play-button {
+  font-size: 18px;
+  border-radius: 15px;
+  border: solid rgb(157, 137, 83) 2px;
+  padding: 5px;
 }
 
 .pirates {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  margin: 30px;
-  gap: 20px;
+  min-height: 60%;
 }
 
 .row2 {
   display: flex;
-  gap: 40px;
+  justify-content: space-evenly;
+  min-width: 80%;
+}
+
+.game-over-hidden {
+  opacity: 0;
+  display: flex;
+  font-size: 32px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color:#f2cabb;
+  position: fixed;
+  top: 30%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  transform: scale(1.5);
+  padding: 20px;
+  min-width: 60%;
+  border: solid black 2px;
+  border-radius: 9px;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+}
+
+.game-over {
+  opacity: 1;
+  box-shadow: 2px 9px 6px rgb(57, 43, 35);
+  transform: scale(1);
+  display: flex;
+  font-size: 32px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color:#f2cabb;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  min-width: 60%;
+  border: solid black 3px;
+  border-radius: 9px;
+  transition: all 0.2s ease-out;
 }

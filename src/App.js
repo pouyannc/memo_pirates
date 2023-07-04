@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Pirate from './components/Pirate';
 import Header from './components/Header';
 import GameOver from './components/GameOver';
@@ -10,8 +10,11 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerInputs, setPlayerInputs] = useState([]);
   const [lose, setLose] = useState(false);
-  
+  const [prvsPirate, setPrvsPirate] = useState('');
+
+  const clickTimeout = useRef(undefined);
   const timer = ms => new Promise(res => setTimeout(res, ms));
+  const main = document.querySelector('main');
 
   const pirates = ['mc', 'big', 'captain', 'whale'];
   const keys = new Map([
@@ -19,7 +22,13 @@ function App() {
     ['ArrowLeft', 'big'],
     ['ArrowRight', 'captain'],
     ['ArrowDown', 'whale']
-  ])
+  ]);
+  const volumes = new Map([
+    ['mc', 1.0],
+    ['captain', 0.8],
+    ['big', 0.5],
+    ['whale', 1.0]
+  ]);
 
   // displaying pirate animation when clicked or invoked through patterns
   const handlePirateClick = (e, pirate = undefined) => {
@@ -31,16 +40,27 @@ function App() {
       } else pirate = e.target;
     } else pirate = document.querySelector(`.${pirate}`);
 
-    pirate.nextSibling.play();
-    pirate.parentNode.className = 'clicked';
-    setTimeout(() => {
-      pirate.parentNode.className = 'pirate-button';
-    }, 600);
-
     if (!disabled) {
-      console.log(pirate.className)
+      !pirate.nextSibling.paused && console.log(pirate.nextSibling.paused)
+      if (!pirate.nextSibling.paused) {
+        clearTimeout(clickTimeout.current);
+        prvsPirate.parentNode.className = 'pirate-button';
+        pirate.parentNode.className = 'pirate-button';
+        //pirate.nextSibling.pause();
+        pirate.nextSibling.currentTime = 0;
+      }
       setPlayerInputs(p => [...p, pirate.className]);
     }
+
+    const pirateVolume = volumes.get(pirate.className);
+    pirate.nextSibling.volume = pirateVolume;
+    pirate.nextSibling.play();
+    pirate.parentNode.className = 'clicked';
+    clickTimeout.current = setTimeout(() => {
+      pirate.parentNode.className = 'pirate-button';
+    }, 400);
+
+    setPrvsPirate(pirate);
   };
 
   // initial start of the first round (initial play or play again or reset)
@@ -53,8 +73,11 @@ function App() {
   };
 
   // starting the next round
-  const handleRound = () => {
+  const handleRound = async () => {
     setDisabled(true);
+    await timer(300);
+    main.className = 'shift';
+    await timer(1000);
     const randomPirate = pirates[Math.floor(Math.random()*pirates.length)];
     setPattern([...pattern, randomPirate]);
   };
@@ -64,11 +87,7 @@ function App() {
     // skipping the first render and when a game ends so that disabled stays true until new game starts. 
     // handleRound here to ensure pattern is emptied.
     if(pattern.length < 1) {
-      if (gameStarted) {
-        setTimeout(() => {
-          handleRound();
-        }, 1200);
-      }
+      if (gameStarted) handleRound();
       return;
     }
 
@@ -78,6 +97,7 @@ function App() {
         await timer(800);
       }
       setDisabled(false);
+      main.className = 'normal';
     }
     playPattern();
   }, [pattern]);
@@ -100,9 +120,7 @@ function App() {
       setDisabled(true);
       setScore(s => s+1);
       setPlayerInputs([]);
-      setTimeout(() => {
-        handleRound();
-      }, 1200);
+      handleRound();
     };
     if (playerInputs.length === pattern.length) handleTurnWin();
   }, [playerInputs]);
@@ -111,11 +129,11 @@ function App() {
     if (!disabled) window.addEventListener('keydown', handlePirateClick);
 
     return () => {window.removeEventListener('keydown', handlePirateClick);};
-  }, [disabled])
+  }, [disabled, prvsPirate])
 
   return (
-    <main>
-      <Header score={score} handleStart={handleGameStart} btnText={gameStarted ? 'Reset' : 'Play'} />
+    <main className='normal'>
+      <Header score={score} handleStart={handleGameStart} btnText={gameStarted ? 'Reset' : 'Play'} disabled={disabled && gameStarted} />
 
       <div className='pirates'>
         <div className='row1'>
@@ -130,7 +148,7 @@ function App() {
         </div>
       </div>
 
-      {lose && <GameOver score={score} />}
+      <GameOver score={score} className={lose ? 'game-over' : 'game-over-hidden'} />
     </main>
   );
 }
