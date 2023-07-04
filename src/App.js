@@ -107,7 +107,6 @@ function App() {
 
     // when the player input does not match the pattern
     const handleGameOver = () => {
-      console.log(highScore);
       if (highScore) {
         if (score > highScore) {
           localStorage.setItem('highScore', score);
