@@ -185,6 +185,10 @@ main {
   border-radius: 15px;
   border: solid rgb(157, 137, 83) 2px;
   padding: 5px;
+  cursor: pointer; 
+}
+.play-button:hover {
+  background-color: #dad5d5;
 }
 
 .pirates {

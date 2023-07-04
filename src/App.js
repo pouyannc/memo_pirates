@@ -11,6 +11,7 @@ function App() {
   const [playerInputs, setPlayerInputs] = useState([]);
   const [lose, setLose] = useState(false);
   const [prvsPirate, setPrvsPirate] = useState('');
+  const [highScore, setHighScore] = useState(localStorage.getItem('highScore'));
 
   const clickTimeout = useRef(undefined);
   const timer = ms => new Promise(res => setTimeout(res, ms));
@@ -33,7 +34,6 @@ function App() {
   // displaying pirate animation when clicked or invoked through patterns
   const handlePirateClick = (e, pirate = undefined) => {
     if (!pirate) {
-      // FIGURE OUT HOW TO TAKE FOCUS OFF
       if (e.key) {
         if (keys.has(e.key)) pirate = document.querySelector(`.${keys.get(e.key)}`);
         else return;
@@ -46,7 +46,6 @@ function App() {
         clearTimeout(clickTimeout.current);
         prvsPirate.parentNode.className = 'pirate-button';
         pirate.parentNode.className = 'pirate-button';
-        //pirate.nextSibling.pause();
         pirate.nextSibling.currentTime = 0;
       }
       setPlayerInputs(p => [...p, pirate.className]);
@@ -108,6 +107,16 @@ function App() {
 
     // when the player input does not match the pattern
     const handleGameOver = () => {
+      console.log(highScore);
+      if (highScore) {
+        if (score > highScore) {
+          localStorage.setItem('highScore', score);
+          setHighScore(score);
+        }
+      } else {
+        localStorage.setItem('highScore', score);
+        setHighScore(score);
+      }
       setLose(true);
       setGameStarted(false);
       setDisabled(true);
@@ -148,7 +157,7 @@ function App() {
         </div>
       </div>
 
-      <GameOver score={score} className={lose ? 'game-over' : 'game-over-hidden'} />
+      <GameOver score={score} highScore={highScore} className={lose ? 'game-over' : 'game-over-hidden'} />
     </main>
   );
 }
