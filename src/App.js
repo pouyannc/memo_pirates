@@ -41,7 +41,6 @@ function App() {
     } else pirate = document.querySelector(`.${pirate}`);
 
     if (!disabled) {
-      !pirate.nextSibling.paused && console.log(pirate.nextSibling.paused)
       if (!pirate.nextSibling.paused) {
         clearTimeout(clickTimeout.current);
         prvsPirate.parentNode.className = 'pirate-button';
@@ -49,7 +48,7 @@ function App() {
         pirate.nextSibling.currentTime = 0;
       }
       setPlayerInputs(p => [...p, pirate.className]);
-    }
+    } else if (!pirate.nextSibling.paused) pirate.nextSibling.currentTime = 0;
 
     const pirateVolume = volumes.get(pirate.className);
     pirate.nextSibling.volume = pirateVolume;
@@ -57,7 +56,7 @@ function App() {
     pirate.parentNode.className = 'clicked';
     clickTimeout.current = setTimeout(() => {
       pirate.parentNode.className = 'pirate-button';
-    }, 400);
+    }, 500);
 
     setPrvsPirate(pirate);
   };
@@ -76,7 +75,7 @@ function App() {
     setDisabled(true);
     await timer(300);
     main.className = 'shift';
-    await timer(1000);
+    await timer(900);
     const randomPirate = pirates[Math.floor(Math.random()*pirates.length)];
     setPattern([...pattern, randomPirate]);
   };
@@ -93,7 +92,7 @@ function App() {
     const playPattern = async () => {
       for (let pirate of pattern) {
         handlePirateClick(null, pirate);
-        await timer(800);
+        await timer(650);
       }
       setDisabled(false);
       main.className = 'normal';
